@@ -1,0 +1,183 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Enregistrement d'un utilisateur",
+                "operationId": "6bbfe096d4853134feef1870e143c07f",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur enregistré avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Connexion de l'utilisateur",
+                "operationId": "2cc6991997564255fab5a657ec802123",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur connecté avec succès"
+                    },
+                    "401": {
+                        "description": "Identifiants invalides"
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "tags": [
+                    "Profil"
+                ],
+                "summary": "Profil de l'utilisateur",
+                "operationId": "149a452cdef347fe74d1bbbd96410ce8",
+                "responses": {
+                    "200": {
+                        "description": "Données du profil de l'utilisateur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/refresh": {
+            "get": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Actualisation du jeton d'accès",
+                "operationId": "f1ffa7237158b9624faff97ec4b4bda2",
+                "responses": {
+                    "200": {
+                        "description": "Nouveau jeton d'accès généré avec succès"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion de l'utilisateur",
+                "operationId": "5c5206245716731df6d6e8e66af6fec7",
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur déconnecté avec succès"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/postuler/{id}/accept": {
+            "put": {
+                "tags": [
+                    "Candidatures"
+                ],
+                "summary": "Accepter une candidature",
+                "operationId": "8064e37939c519610d070890aada4cba",
+                "responses": {
+                    "200": {
+                        "description": "Candidature acceptée avec succès"
+                    },
+                    "404": {
+                        "description": "Candidature non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/postuler/{id}/reject": {
+            "put": {
+                "tags": [
+                    "Candidatures"
+                ],
+                "summary": "Refuser une candidature",
+                "operationId": "4ae69bde883ba0e6408c271ae912ec27",
+                "responses": {
+                    "200": {
+                        "description": "Candidature refusée avec succès"
+                    },
+                    "404": {
+                        "description": "Candidature non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    }
+}
