@@ -14,14 +14,15 @@ class CandidatMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next) : Response
-    {
-        $user = Auth::user();
+    // public function handle($request, Closure $next) : Response
+    // {
+    //     $user = Auth::user();
 
-        if ($user && $user->role === 'User') {
-            return $next($request);
-        }
+    //     if ($user && $user->role === 'User') {
+    //         return $next($request);
+    //     }
 
-        return response()->json(['error' => "Vous n'êtes pas autorisé à accéder à cette page en tant que candidat"], 403);
-    }
+    //     return response()->json(['error' => "Vous n'êtes pas autorisé à accéder à cette page en tant que candidat"], 403);
+    // }
 }
+

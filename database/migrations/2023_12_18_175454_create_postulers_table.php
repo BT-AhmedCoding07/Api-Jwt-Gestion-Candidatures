@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_referentiel', function (Blueprint $table) {
+        Schema::create('postulers', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['Accepté', 'Refusé', 'En attente']);
             $table->foreignIdFor(\App\Models\User::class)->constrained()->onDelete('cascade');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_referentiel');
+        Schema::dropIfExists('postulers');
     }
 };

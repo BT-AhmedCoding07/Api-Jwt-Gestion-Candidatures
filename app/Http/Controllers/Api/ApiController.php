@@ -27,15 +27,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ApiController extends Controller
 {
 
-    //Function Retour reponse json
-    private function jsonResponse($status, $message, $data = null): \Illuminate\Http\JsonResponse
-    {
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-            'data' => $data,
-        ]);
-    }
     /**
      * @OA\Post(
      *     path="/register",
@@ -58,28 +49,33 @@ class ApiController extends Controller
      * )
      */
     //Register API {POST, FormData}
-    public function register(Request $request): \Illuminate\Http\JsonResponse
-    {
+    // User Register (POST, formdata)
+    public function register(Request $request){
+
         // data validation
         $request->validate([
             "nom" => "required",
             "email" => "required|email|unique:users",
-            "telephone" => "required|max:9|unique:users",
-            "password" => "required|confirmed"
+            "password" => "required|confirmed",
+            "telephone" => "required|max:9"
         ]);
 
         // User Model
-        User::create([
+        $user =  User::create([
             "nom" => $request->nom,
             "email" => $request->email,
-            "telephone" => $request->telephone,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "telephone" => $request->telephone
         ]);
 
         // Response
-        return $this->jsonResponse(true, "User registered successfully");
-
+        return response()->json([
+            "status" => true,
+            "message" => "User registered successfully",
+            "User" => $user
+        ]);
     }
+
     /**
      * @OA\Post(
      *     path="/login",
@@ -99,34 +95,34 @@ class ApiController extends Controller
      * )
      */
     //Login API {POST, FormData}
-    public function login(Request $request)
-    {
-        //Data validation
+    // User Login (POST, formdata)
+    public function login(Request $request){
+
+        // data validation
         $request->validate([
             "email" => "required|email",
             "password" => "required"
         ]);
-        //JWTAuth and attempt
-        $token  = JWTAuth::attempt([
-         "email" => $request->email,
-         "password" => $request->password,
+
+        // JWTAuth
+        $token = JWTAuth::attempt([
+            "email" => $request->email,
+            "password" => $request->password
         ]);
+
         if(!empty($token)){
 
-           return response()->json([
-           "status" => true,
-           "message" => "User logged in succcessfully",
-           "token" => $token
-           ]);
-
-
+            return response()->json([
+                "status" => true,
+                "message" => "User logged in succcessfully",
+                "token" => $token
+            ]);
         }
 
         return response()->json([
             "status" => false,
             "message" => "Invalid details"
         ]);
-
     }
     /**
      * @OA\Get(
@@ -139,19 +135,16 @@ class ApiController extends Controller
      */
     //Profile API{GET}
     // User Profile (GET)
-    public function profile(): \Illuminate\Http\JsonResponse
-    {
+    // User Profile (GET)
+    public function profile(){
 
         $userdata = auth()->user();
-        /*
-         * return response()->json([
+
+        return response()->json([
             "status" => true,
             "message" => "Profile data",
             "data" => $userdata
         ]);
-         */
-        return $this->jsonResponse(true, "Profile data", $userdata);
-
     }
     /**
      * @OA\Get(
@@ -163,18 +156,16 @@ class ApiController extends Controller
      * )
      */
     // To generate refresh token value
-    public function refreshToken(): \Illuminate\Http\JsonResponse
-    {
+    // To generate refresh token value
+    public function refreshToken(){
 
         $newToken = auth()->refresh();
-        /*
-         * return response()->json([
+
+        return response()->json([
             "status" => true,
             "message" => "New access token",
             "token" => $newToken
         ]);
-         */
-        return $this->jsonResponse(true, "New access token", compact('newToken'));
     }
     /**
      * @OA\Post(
@@ -186,16 +177,13 @@ class ApiController extends Controller
      * )
      */
     // User Logout (GET)
-    public function logout(): \Illuminate\Http\JsonResponse
-    {
+    public function logout(){
 
         auth()->logout();
-        /*
-         * return response()->json(data: [
+
+        return response()->json([
             "status" => true,
             "message" => "User logged out successfully"
         ]);
-         */
-        return $this->jsonResponse(true, "User logged out successfully");
     }
 }

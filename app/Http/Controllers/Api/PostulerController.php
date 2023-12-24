@@ -21,16 +21,16 @@ class PostulerController extends Controller
     public function index(): \Illuminate\Http\JsonResponse
     {
 
-        $candidats = Postuler::all();
+        $listes = Postuler::all();
         return response()->json([
             "status" => true,
             "messages" => "Listes des candidatures",
-            "candidatures" => $candidats
+            "candidatures" => $listes
         ]);
     }
     /**
      * @OA\Post(
-     *     path="/postuler",
+     *     path="api/postuler",
      *     summary="Envoi d'une candidature",
      *     tags={"Candidatures"},
      *     security={{"bearerAuth": {}}},
@@ -55,9 +55,9 @@ class PostulerController extends Controller
         $request->validate([
             'referentiel_id' => 'required|exists:referentiels,id',
         ]);
-
+       dd(Auth::guard('api')->user());
         $postuler = new Postuler();
-        $postuler->user_id = Auth::guard()->user()->id;
+        $postuler->user_id = Auth::guard('api')->user()->id;
         $postuler->referentiel_id = $request->referentiel_id;
         $postuler->status = 'En attente';
         $postuler->save();
@@ -70,7 +70,7 @@ class PostulerController extends Controller
     }
     /**
      * @OA\Get(
-     *     path="/postuler/{id}",
+     *     path="api/postuler/{id}",
      *     summary="Détails d'une candidature",
      *     tags={"Candidatures"},
      *     security={{"bearerAuth": {}}},
@@ -97,7 +97,7 @@ class PostulerController extends Controller
     }
     /**
      * @OA\Put(
-     *     path="/postuler/{id}/accept",
+     *     path="api/postuler/{id}/accept",
      *     summary="Accepter une candidature",
      *     tags={"Candidatures"},
      *     security={{"bearerAuth": {}}},
@@ -105,9 +105,8 @@ class PostulerController extends Controller
      *     @OA\Response(response="404", description="Candidature non trouvée"),
      * )
      */
-    public function accept($id)
+    public function accept($id): \Illuminate\Http\JsonResponse
     {
-        dd('ok');
         $postuler = Postuler::findOrFail($id);
         $postuler->status = 'Accepté';
         $postuler->save();
@@ -119,7 +118,7 @@ class PostulerController extends Controller
     }
     /**
      * @OA\Put(
-     *     path="/postuler/{id}/reject",
+     *     path="api/postuler/{id}/reject",
      *     summary="Refuser une candidature",
      *     tags={"Candidatures"},
      *     security={{"bearerAuth": {}}},
@@ -127,7 +126,7 @@ class PostulerController extends Controller
      *     @OA\Response(response="404", description="Candidature non trouvée"),
      * )
      */
-    public function reject($id)
+    public function rejet($id): \Illuminate\Http\JsonResponse
     {
         $postuler = Postuler::findOrFail($id);
         $postuler->status = 'Refusé';
@@ -140,7 +139,7 @@ class PostulerController extends Controller
     }
     /**
      * @OA\Delete(
-     *     path="/postuler/{id}",
+     *     path="api/postuler/{id}",
      *     summary="Supprimer une candidature",
      *     tags={"Candidatures"},
      *     security={{"bearerAuth": {}}},

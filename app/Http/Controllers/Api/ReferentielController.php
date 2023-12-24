@@ -16,7 +16,7 @@ class ReferentielController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/referentiels",
+     *     path="api/referentiels",
      *     summary="Liste des referentiels",
      *     tags={"Referentiels"},
      *     security={{"bearerAuth": {}}},
